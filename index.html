@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossa Aventura ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="tela-menu" class="screen">
+        <h1>Nossa Aventura ❤️</h1>
+        <div class="menu-buttons">
+            <button onclick="iniciarNovaAventura()">Iniciar Nova Aventura</button>
+            <button id="btn-retomar" onclick="retomarAventura()" disabled>Retomar Aventura</button>
+            <button onclick="mostrarTela('tela-cartinha')">Ler Cartinha</button>
+            <button onclick="mostrarTela('tela-fotos')">Ver Fotos</button>
+        </div>
+    </div>
+
+    <div id="tela-cartinha" class="screen hidden">
+        <h2>Nossa Cartinha de 3 Meses</h2>
+        <div class="content-box">
+            <p>Amor da minha vida,</p>
+            <p>Estes 3 meses foram os melhores...</p>
+            <p>(Cole o texto completo da sua cartinha aqui)</p>
+        </div>
+        <button onclick="mostrarTela('tela-menu')">Voltar ao Menu</button>
+    </div>
+
+    <div id="tela-fotos" class="screen hidden">
+        <h2>Nossos Momentos</h2>
+        <div class="content-box">
+            <p>(No futuro podemos colocar tags de imagem aqui para criar a galeria)</p>
+        </div>
+        <button onclick="mostrarTela('tela-menu')">Voltar ao Menu</button>
+    </div>
+
+    <div id="tela-jogo" class="screen hidden">
+        
+        <div id="sidebar">
+            <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            <div class="sidebar-content">
+                <button onclick="pausarJogo()">⏸ Pausar</button>
+                <button onclick="salvarESair()">💾 Salvar e Sair</button>
+                <button onclick="sairSemSalvar()">🚪 Sair sem Salvar</button>
+            </div>
+        </div>
+        
+        <div id="area-fases">
+            <h2 id="titulo-fase">Fase Atual</h2>
+            <p id="coordenada-display">Senha revelada: <span id="senha-revelada">_ _ _ _</span></p>
+            
+            <div id="jogo-termoo" class="game-container hidden">
+                <p style="margin-bottom: 15px; color: #ffca28; font-weight: bold;">Dica: Tem 7 letras. Lembra de algo gostoso?</p>
+                <div id="termoo-board"></div>
+                <div id="termoo-keyboard"></div>
+            </div>
+
+            <div id="jogo-dino" class="game-container hidden">
+                <p style="margin-bottom: 10px; color: #ffca28; font-weight: bold;">Corra para mim! Alcance 1000 pontos.</p>
+                <p style="font-size: 1.2rem; margin-bottom: 10px;">Pontuação: <span id="dino-score" style="color: #2ed573; font-weight: bold;">0</span></p>
+                
+                <canvas id="dino-canvas" width="600" height="150"></canvas>
+                
+                <p style="font-size: 0.8rem; margin-top: 15px; color: #ced6e0;">(Toque na tela do jogo ou aperte ESPAÇO para pular)</p>
+            </div>
+
+            <div id="jogo-snake" class="game-container hidden">
+                <p style="margin-bottom: 10px; color: #ffca28; font-weight: bold;">Nosso amor cresce a cada dia! Alcance 10.226 pontos.</p>
+                <p style="font-size: 1.2rem; margin-bottom: 10px;">Pontuação: <span id="snake-score" style="color: #2ed573; font-weight: bold;">0</span></p>
+                
+                <canvas id="snake-canvas" width="400" height="400"></canvas>
+                
+                <div id="snake-controls">
+                    <button class="dpad-btn" onclick="mudarDirecao('UP')">▲</button>
+                    <div class="dpad-row">
+                        <button class="dpad-btn" onclick="mudarDirecao('LEFT')">◄</button>
+                        <button class="dpad-btn" onclick="mudarDirecao('DOWN')">▼</button>
+                        <button class="dpad-btn" onclick="mudarDirecao('RIGHT')">►</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jogo-tictactoe" class="game-container hidden">
+                <p style="margin-bottom: 15px; color: #ffca28; font-weight: bold;">É impossível me vencer! Ou será que você consegue pensar FORA DA CAIXA?</p>
+                <div id="ttt-board"></div>
+            </div>
+
+            <button id="btn-proxima-fase" class="hidden" onclick="avancarFase()">Ir para a Próxima Fase ➔</button>
+        </div>
+    </div>
+
+    <div id="tela-mapa" class="screen hidden">
+        <h2>Destino Surpresa! 🗺️</h2>
+        <p style="margin-bottom: 20px;">Digite a senha completa para destravar o destino:</p>
+
+        <div class="content-box">
+            <label for="senha-input">Senha</label>
+            <input id="senha-input" type="text" placeholder="-20.6156,-46.0494" autocomplete="off" />
+            <button id="btn-senha-enviar" onclick="validarSenhaFinal()">Enviar senha</button>
+        </div>
+
+        <div id="mapa-container" class="hidden">
+            <p>Destino desbloqueado! Aqui está o local:</p>
+            <div id="mapa-frame-wrapper">
+                <iframe id="mapa-iframe" src="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <p id="senha-final" class="senha-final-text"></p>
+            <button class="secondary" onclick="abrirGoogleMaps()">Abrir no Google Maps</button>
+        </div>
+
+        <button onclick="mostrarTela('tela-menu')">Voltar ao Menu Principal</button>
+    </div>
+
+    <div id="custom-alert" class="hidden">
+        <div class="alert-box">
+            <h3 style="color: #ff4757; margin-bottom: 10px;">❤️ Aviso ❤️</h3>
+            <p id="alert-message"></p>
+            <button onclick="fecharAlerta()">Entendi</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

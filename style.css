@@ -1,0 +1,423 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #2c3e50;
+    color: white;
+    display: flex;
+    justify-content: center;
+    /* Trocamos height fixo por min-height para permitir que a tela cresça */
+    min-height: 100vh;
+    /* Liberamos o scroll vertical, mas travamos o horizontal */
+    overflow-x: hidden; 
+}
+
+.screen {
+    width: 100%;
+    max-width: 800px;
+    min-height: 100vh; /* Tela agora pode crescer se precisar */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente Telas de Menu/Cartinha */
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1, h2 {
+    color: #ff6b81;
+    margin-bottom: 30px;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px;
+}
+
+button {
+    padding: 15px;
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+}
+
+button:hover:not(:disabled) {
+    background-color: #ff6b81;
+    transform: scale(1.05);
+}
+
+button:disabled {
+    background-color: #7f8fa6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.content-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+/* --- SIDEBAR RETRÁTIL --- */
+#tela-jogo {
+    position: relative;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#sidebar {
+    position: fixed; /* Fica fixo mesmo quando a tela rola */
+    left: -220px;
+    top: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: rgba(30, 39, 46, 0.98);
+    backdrop-filter: blur(5px);
+    transition: left 0.3s ease-in-out;
+    z-index: 100;
+    border-right: 2px solid #ff4757;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+}
+
+#sidebar.open {
+    left: 0;
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    padding: 60px 20px 20px 20px;
+    gap: 15px;
+}
+
+#sidebar-toggle {
+    position: absolute;
+    right: -45px;
+    top: 20px;
+    width: 45px;
+    height: 45px;
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+}
+
+/* --- ÁREA DO JOGO --- */
+#area-fases {
+    flex-grow: 1;
+    /* Jogamos o conteúdo um pouco pra baixo (60px) para fugir do botão do menu */
+    padding: 60px 20px 40px 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* O conteúdo começa do topo e desce */
+    width: 100%;
+    min-height: 100vh;
+}
+
+#coordenada-display {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+#senha-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+#senha-input:focus {
+    outline: none;
+    border-color: #2ed573;
+}
+
+#mapa-frame-wrapper {
+    width: 100%;
+    max-width: 100%;
+    height: 280px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+#mapa-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.secondary {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+#senha-final {
+    margin-top: 10px;
+    color: #2ed573;
+    font-weight: 600;
+}
+
+#senha-revelada {
+    font-weight: bold;
+    color: #2ed573;
+    letter-spacing: 2px;
+}
+
+/* --- FASE 1: TERMOO --- */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#termoo-board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 350px; /* Limita o tamanho máximo */
+}
+
+.termoo-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 letras */
+    gap: 5px;
+}
+
+.termoo-cell {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Garante que sempre seja um quadrado perfeito */
+    border: 2px solid #576574;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(1.2rem, 5vw, 1.5rem); /* Fonte que encolhe em telas pequenas */
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
+
+.termoo-cell.correct { background-color: #2ed573; border-color: #2ed573; }
+.termoo-cell.present { background-color: #eccc68; border-color: #eccc68; }
+.termoo-cell.absent { background-color: #576574; border-color: #576574; }
+
+#termoo-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.key-row {
+    display: flex;
+    justify-content: center;
+    gap: max(3px, 1vw); /* Espaçamento dinâmico */
+}
+
+.key {
+    background-color: #747d8c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 5px; /* Menos padding lateral para caber tudo na mesma linha */
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+    text-transform: uppercase;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
+}
+
+.key:active { transform: scale(0.95); }
+.key.correct { background-color: #2ed573; }
+.key.present { background-color: #eccc68; }
+.key.absent { background-color: #576574; }
+
+#btn-proxima-fase {
+    margin-top: 30px;
+    background-color: #2ed573;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    box-shadow: 0 5px 15px rgba(46, 213, 115, 0.4);
+    animation: pulse 1.5s infinite;
+}
+
+#btn-proxima-fase:hover {
+    background-color: #26de81;
+}
+
+/* --- FASE 2: DINO --- */
+#dino-canvas {
+    background-color: #f1f2f6;
+    border: 2px solid #576574;
+    border-radius: 10px;
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+    width: 100%; /* Faz o canvas espremer para caber no celular */
+    max-width: 600px;
+    height: auto; /* Mantém a proporção do dinossauro certinha */
+    display: block;
+    cursor: pointer;
+    touch-action: none; /* MUITO IMPORTANTE: Impede a página de rolar quando ela deslizar o dedo no jogo! */
+}
+
+/* --- ALERTA PERSONALIZADO --- */
+#custom-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.alert-box {
+    background-color: white;
+    color: #2c3e50;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 90%;
+    width: 350px;
+    box-shadow: 0 10px 30px rgba(255, 107, 129, 0.4);
+    border: 3px solid #ff4757;
+    animation: popIn 0.3s ease-out;
+}
+
+.alert-box p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* --- FASE 3: SNAKE (COBRINHA) --- */
+#snake-canvas {
+    background-color: #2f3640; /* Fundo mais escuro pra destacar a cobrinha */
+    border: 3px solid #576574;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 350px; /* Encolhe para caber no celular */
+    height: auto;
+    display: block;
+}
+
+#snake-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.dpad-row {
+    display: flex;
+    gap: 8px;
+}
+
+.dpad-btn {
+    width: 60px;
+    height: 60px;
+    background-color: #576574;
+    color: white;
+    font-size: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-shadow: 0 6px 0 #2f3640;
+    touch-action: manipulation; /* Evita zoom duplo no celular ao clicar rápido */
+    user-select: none; /* Evita selecionar o botão como texto */
+}
+
+.dpad-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #2f3640;
+    background-color: #ff4757; /* Fica vermelho ao apertar */
+}
+
+/* --- FASE 4: TIC TAC TOE (JOGO DA VELHA) --- */
+#ttt-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    gap: 4px;
+}
+
+.ttt-cell {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Destaca ainda mais o centro 3x3 */
+.ttt-cell.center-cell {
+    border: 2px solid #576574;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Cores do X e O */
+.ttt-cell.x { color: #ff4757; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
+.ttt-cell.o { color: #2ed573; text-shadow: 0 0 10px rgba(46, 213, 115, 0.5); }
