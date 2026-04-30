@@ -7,7 +7,8 @@ let gameState = {
     termoo: { tentativas: [], gameOver: false },
     dino: { gameOver: false },
     snake: { gameOver: false },
-    ttt: { board: Array(25).fill(''), gameOver: false }
+    ttt: { board: Array(25).fill(''), gameOver: 
+        false }
 };
 
 window.onload = () => {
@@ -22,6 +23,34 @@ function mostrarTela(idTela) {
     document.querySelectorAll('.screen').forEach(tela => tela.classList.add('hidden'));
     document.getElementById(idTela).classList.remove('hidden');
 }
+
+// --- GALERIA DE FOTOS ---
+function abrirFoto(caminhoFoto) {
+    const modal = document.getElementById('modal-foto');
+    const imgModal = document.getElementById('img-modal');
+    imgModal.src = caminhoFoto;
+    modal.classList.remove('hidden');
+}
+
+function fecharModalFoto() {
+    const modal = document.getElementById('modal-foto');
+    modal.classList.add('hidden');
+}
+
+// Fecha modal ao clicar fora da imagem
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('modal-foto');
+    if (event.target === modal) {
+        fecharModalFoto();
+    }
+});
+
+// Fecha modal com tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        fecharModalFoto();
+    }
+});
 
 function iniciarNovaAventura() {
     gameState = {
@@ -78,12 +107,13 @@ function normalizarSenha(valor) {
 }
 
 function extrairSenha(valor) {
-    const texto = normalizarSenha(valor);
-    const match = texto.match(/^(-?\d+(?:\.\d+)?)[, ]?(-?\d+(?:\.\d+)?)$/);
+    const texto = valor.toString().trim();
+    // Tenta extrair dois números separados por vírgula, espaço, ou ambos
+    const match = texto.match(/(-?\d+\.?\d*)\s*,?\s*(-?\d+\.?\d*)/);
     if (match) {
         return `${match[1]},${match[2]}`;
     }
-    return texto;
+    return normalizarSenha(valor);
 }
 
 function prepararTelaMapa() {

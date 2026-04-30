@@ -22,11 +22,16 @@ body {
     min-height: 100vh; /* Tela agora pode crescer se precisar */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centraliza verticalmente Telas de Menu/Cartinha */
+    justify-content: flex-start;
     align-items: center;
     text-align: center;
     padding: 20px;
 }
+
+#tela-fotos {
+    justify-content: flex-start;
+}
+
 
 .hidden {
     display: none !important;
@@ -421,3 +426,79 @@ button:disabled {
 /* Cores do X e O */
 .ttt-cell.x { color: #ff4757; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
 .ttt-cell.o { color: #2ed573; text-shadow: 0 0 10px rgba(46, 213, 115, 0.5); }
+
+/* --- GALERIA DE FOTOS --- */
+.galeria-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+}
+
+.foto-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    aspect-ratio: 1 / 1;
+}
+
+.foto-item:hover {
+    opacity: 0.8;
+}
+
+.foto-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* --- MODAL DE FOTO --- */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 8px;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #ff6b81;
+}
