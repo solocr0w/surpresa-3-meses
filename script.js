@@ -748,6 +748,15 @@ function jogarTTT(index, jogador) {
                     mostrarTela('tela-mapa');
                 };
             });
+        } else if (jogador === 'O') {
+            mostrarAlerta("A máquina venceu desta vez... Mas você pode tentar novamente! 🎮", () => {
+                // Reset do jogo TTT para permitir tentar novamente
+                gameState.ttt = { board: Array(25).fill(''), gameOver: false };
+                localStorage.setItem('saveAventura', JSON.stringify(gameState));
+                vezDoJogador = true;
+                tttAvisoEmpateMostrado = false;
+                iniciarTTT();
+            });
         }
         return;
     }
